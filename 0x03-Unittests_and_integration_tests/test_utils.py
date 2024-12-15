@@ -98,57 +98,31 @@ class TestGetJson(unittest.TestCase):
 class TestMemoize(unittest.TestCase):
     """
     Test case for the memoize decorator.
-
-    Provides tests to verify that the memoize decorator 
-    caches method results and only calls the original 
-    method once.
+    Verifies that memoize caches the result of a method after the first call.
     """
 
-    def test_memoize(self):
+    class TestClass:
+        def a_method(self):
+            return 42
+
+        @memoize
+        def a_property(self):
+            return self.a_method()
+
+    @patch.object(TestClass, 'a_method', return_value=42)
+    def test_memoize(self, mock_a_method):
         """
-        Test the memoize decorator's caching behavior.
-
-        Verifies that the memoized method is only called once
-        when accessed multiple times, and returns the correct result.
+        Test that a_property calls a_method only once, even when accessed multiple times.
         """
-        class TestClass:
-            def a_method(self):
-                """
-                A sample method to be memoized.
+        obj = self.TestClass()
 
-                Returns:
-                    int: A constant value.
-                """
-                return 42
+        # Call the memoized property twice
+        self.assertEqual(obj.a_property, 42)
+        self.assertEqual(obj.a_property, 42)
 
-            @memoize
-            def a_property(self):
-                """
-                A memoized property that calls a_method.
+        # Assert that a_method was called only once
+        mock_a_method.assert_called_once()
 
-                Returns:
-                    int: Result of a_method.
-                """
-                return self.a_method()
-
-        # Create an instance of the test class
-        test_obj = TestClass()
-
-        # Mock the a_method
-        with patch.object(test_obj, 'a_method') as mock_method:
-            # Configure the mock to return 42
-            mock_method.return_value = 42
-
-            # Call a_property twice
-            result1 = test_obj.a_property
-            result2 = test_obj.a_property
-
-            # Assert that a_method was called only once
-            mock_method.assert_called_once()
-
-            # Assert that both calls return the same result
-            self.assertEqual(result1, 42)
-            self.assertEqual(result2, 42)
 
 
 if __name__ == '__main__':
