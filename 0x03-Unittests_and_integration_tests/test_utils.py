@@ -115,7 +115,7 @@ class TestMemoize(unittest.TestCase):
     @patch.object(TestClass, 'a_method', return_value=42)
     def test_memoize(self, mock_a_method):
         """
-        Test that a_property calls a_method only once, 
+        Test that a_property calls a_method only once,
         even when accessed multiple times.
         """
         obj = self.TestClass()
