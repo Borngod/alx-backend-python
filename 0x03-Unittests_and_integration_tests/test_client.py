@@ -28,7 +28,6 @@ class TestGithubOrgClient(unittest.TestCase):
             mock_get_json.assert_called_once_with(
                 f"https://api.github.com/orgs/{org_name}"
             )
-
     def test_public_repos_url(self):
         """
         Test the _public_repos_url property of GithubOrgClient
@@ -40,10 +39,9 @@ class TestGithubOrgClient(unittest.TestCase):
         org_client = GithubOrgClient("google")
 
         with patch.object(GithubOrgClient, "org", new_callable=property) as mock_org:
-            mock_org.return_value = mock_payload
+            mock_org.side_effect = lambda: mock_payload  # Use side_effect for property
             result = org_client._public_repos_url
             self.assertEqual(result, "https://api.github.com/orgs/google/repos")
-
     @patch('client.get_json')
     def test_public_repos(self, mock_get_json):
         """
@@ -64,7 +62,7 @@ class TestGithubOrgClient(unittest.TestCase):
 
         # Use patch as context manager to mock _public_repos_url
         with patch.object(GithubOrgClient, "_public_repos_url", new_callable=property) as mock_repos_url:
-            mock_repos_url.return_value = "https://api.github.com/orgs/google/repos"
+            mock_repos_url.side_effect = lambda: "https://api.github.com/orgs/google/repos"
 
             # Call public_repos and get the result
             result = org_client.public_repos()
