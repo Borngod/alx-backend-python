@@ -1,5 +1,6 @@
 import sqlite3
 import functools
+from datetime import datetime
 
 # Database setup
 def setup_database():
@@ -25,7 +26,8 @@ def log_queries():
             # Extract SQL query from arguments (assuming the first arg is the query string)
             if args:
                 query = args[0]
-                print(f"Executing SQL Query: {query}")
+                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                print(f"[{timestamp}] Executing SQL Query: {query}")
             return func(*args, **kwargs)
         return wrapper
     return decorator
@@ -39,11 +41,14 @@ def execute_query(query, params=None):
     if params:
         cursor.execute(query, params)
     else:
- cursor.execute(query)   
+        cursor.execute(query)
     connection.commit()
     connection.close()
 
 def main():
     setup_database()
     # Insert a user
- execute_query("INSERT INTO")
+    execute_query("INSERT INTO users (name, age) VALUES (?, ?)", ("John Doe", 30))
+
+if __name__ == "__main__":
+    main()
