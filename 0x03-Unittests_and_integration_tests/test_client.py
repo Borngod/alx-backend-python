@@ -27,9 +27,9 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """Mock the response based on URL."""
         if 'orgs/google' in url:
             if '/repos' in url:
-                return MockResponse(json=lambda: repos_payload)
+                return MockResponse(lambda: repos_payload)
             else:
-                return MockResponse(json=lambda: org_payload)
+                return MockResponse(lambda: org_payload)
         raise ValueError("Unexpected URL requested")
 
     @classmethod
@@ -57,7 +57,7 @@ class MockResponse:
 
     def json(self):
         """Return the JSON data."""
-        return self.json_data
+        return self.json_data()
 
 class TestGithubOrgClient(unittest.TestCase):
     """Test class for GithubOrgClient"""
