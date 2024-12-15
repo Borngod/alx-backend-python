@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""Unit tests for the GithubOrgClient class.
-"""
+"""Unit tests for the GithubOrgClient class."""
 
 import unittest
 from unittest.mock import patch, PropertyMock
@@ -17,7 +16,7 @@ class TestGithubOrgClient(unittest.TestCase):
     ])
     def test_org(self, org_name, expected_result):
         """
-        Test the org method of GithubOrgClient
+        Test the org method of GithubOrgClient.
         """
         org_client = GithubOrgClient(org_name)
 
@@ -28,30 +27,32 @@ class TestGithubOrgClient(unittest.TestCase):
             mock_get_json.assert_called_once_with(
                 f"https://api.github.com/orgs/{org_name}"
             )
+
     def test_public_repos_url(self):
-    """
-    Test the _public_repos_url property of GithubOrgClient
-    """
-    mock_payload = {
-        "repos_url": "https://api.github.com/orgs/google/repos"
-    }
+        """
+        Test the _public_repos_url property of GithubOrgClient.
+        """
+        mock_payload = {
+            "repos_url": "https://api.github.com/orgs/google/repos"
+        }
 
-    org_client = GithubOrgClient("google")
+        org_client = GithubOrgClient("google")
 
-    with patch.object(GithubOrgClient, "org", new_callable=PropertyMock) as mock_org:
-        mock_org.return_value = mock_payload
-        result = org_client._public_repos_url
-        self.assertEqual(result, "https://api.github.com/orgs/google/repos")
+        with patch.object(GithubOrgClient, "org", new_callable=PropertyMock) as mock_org:
+            mock_org.return_value = mock_payload
+            result = org_client._public_repos_url
+            self.assertEqual(result, "https://api.github.com/orgs/google/repos")
+
     @patch('client.get_json')
     def test_public_repos(self, mock_get_json):
         """
-        Test the public_repos method of GithubOrgClient
+        Test the public_repos method of GithubOrgClient.
         """
         # Mock payload for public repositories
         mock_payload = {
             "repos": ["repo1", "repo2", "repo3"]
         }
-        
+
         # Mock the _public_repos_url property
         mock_repos_url = "mocked_repos_url"
 
