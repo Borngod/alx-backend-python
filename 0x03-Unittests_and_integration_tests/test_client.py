@@ -1,50 +1,35 @@
-#!/usr/bin/env python3
+##!/usr/bin/env python3
+"""Unit tests for the GithubOrgClient class.
 """
-Unit tests for the GitHub Organization Client.
-"""
+
 import unittest
+from unittest.mock import patch, MagicMock
 from parameterized import parameterized
-from unittest.mock import patch
 from client import GithubOrgClient
 
 
 class TestGithubOrgClient(unittest.TestCase):
-    """
-    Test suite for the GithubOrgClient class.
-    """
+    """Test class for GithubOrgClient."""
 
     @parameterized.expand([
-        ("google",),
-        ("abc",)
+        ("google"),
+        ("abc")
     ])
-    def test_org(self, org_name):
-        """
-        Test that GithubOrgClient.org returns the correct value.
+    @patch('client.get_json')
+    def test_org(self, org_name, mock_get_json):
+        """Test GithubOrgClient.org method returns correct value."""
+        # Setup mock behavior
+        mock_get_json.return_value = {"test_key": "test_value"}
 
-        Args:
-            org_name (str): Name of the GitHub organization to test
-        """
-        # Create test configuration
-        test_payload = {"repos_url": "https://api.github.com/orgs/{}/repos".format(org_name)}
-        
-        # Use patch to mock get_json and prevent external HTTP calls
-        with patch('client.get_json') as mock_get_json:
-            # Set the return value for the mocked get_json
-            mock_get_json.return_value = test_payload
-            
-            # Create GithubOrgClient instance
-            gh_client = GithubOrgClient(org_name)
-            
-            # Call the org method
-            result = gh_client.org()
-            
-            # Verify get_json was called with correct URL
-            mock_get_json.assert_called_once_with(
-                f"https://api.github.com/orgs/{org_name}"
-            )
-            
-            # Verify the returned result matches the test payload
-            self.assertEqual(result, test_payload)
+        # Instantiate the client
+        client = GithubOrgClient(org_name)
+
+        # Call the method being tested
+        result = client.org()
+
+        # Assertions
+        self.assertEqual(result, {"test_key": "test_value"})
+        mock_get_json.assert_called_once_with(f"https://api.github.com/orgs/{org_name}")
 
 
 if __name__ == '__main__':
