@@ -11,7 +11,8 @@ from utils import access_nested_map, get_json, memoize
 from unittest.mock import patch, Mock
 
 
-# Added an extra blank line here
+# Two blank lines before class definition
+
 class TestAccessNestedMap(unittest.TestCase):
     """
     Test case for the access_nested_map function.
@@ -61,6 +62,8 @@ class TestAccessNestedMap(unittest.TestCase):
         )
 
 
+# Two blank lines before class definition
+
 class TestGetJson(unittest.TestCase):
     """
     Test case for the get_json function.
@@ -100,6 +103,8 @@ class TestGetJson(unittest.TestCase):
                 test_payload
             )
 
+
+# Two blank lines before class definition
 
 class TestMemoize(unittest.TestCase):
     """
