@@ -38,12 +38,12 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     @classmethod
     def mock_get_response(cls, url):
         """Mock the response based on URL."""
-        if 'orgs/google' in url:
-            if '/repos' in url:
-                return MockResponse(lambda: cls.repos_payload)
-            else:
-                return MockResponse(lambda: cls.org_payload)
+        if 'orgs/google' in url and '/repos' not in url:
+            return MockResponse(lambda: cls.org_payload)
+        elif 'orgs/google/repos' in url:
+            return MockResponse(lambda: cls.repos_payload)
         raise ValueError("Unexpected URL requested")
+    
 
     @classmethod
     def tearDownClass(cls):
