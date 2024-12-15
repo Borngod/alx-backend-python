@@ -61,10 +61,10 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         This method patches the requests.get method to return predefined
         mock responses for testing purposes.
         """
-        cls.get_patcher = patch(
+        cls._patcher = patch(
             'requests.get', side_effect=cls.mock_get_response
         )
-        cls.get_patcher.start()
+        cls.get_patcher = cls._patcher.start()
 
     @classmethod
     def mock_get_response(cls, url):
@@ -94,7 +94,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         This method stops the mocking of requests.get to restore
         normal network request behavior.
         """
-        cls.get_patcher.stop()
+        cls._patcher.stop()
 
     def test_public_repos(self):
         """
