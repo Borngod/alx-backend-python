@@ -2,13 +2,10 @@
 """Unit tests for the GithubOrgClient class.
 """
 
-
 import unittest
 from unittest.mock import patch, MagicMock
 from parameterized import parameterized
 from client import GithubOrgClient
-from utils import get_json 
-
 
 class TestGithubOrgClient(unittest.TestCase):
     """Test class for GithubOrgClient."""
@@ -17,7 +14,7 @@ class TestGithubOrgClient(unittest.TestCase):
         ("google"),
         ("abc")
     ])
-    @patch('utils.get_json') 
+    @patch('client.get_json')  # Patch get_json as it's imported in client
     def test_org(self, org_name, mock_get_json):
         """Test GithubOrgClient.org method returns correct value."""
         # Setup mock behavior
