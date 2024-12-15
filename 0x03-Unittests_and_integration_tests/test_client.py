@@ -3,14 +3,14 @@
 import unittest
 from unittest.mock import patch, PropertyMock
 from client import GithubOrgClient
-from parameterized import parameterized
-from parameterized import parameterized_class
+from parameterized import parameterized, parameterized_class
 import requests
 from fixtures import TEST_PAYLOAD
 
 
 @parameterized_class([
-    {"org_payload": org_payload, "repos_payload": repos_payload, "expected_repos": expected_repos, "apache2_repos": apache2_repos}
+    {"org_payload": org_payload, "repos_payload": repos_payload, "expected_repos": expected_repos,
+     "apache2_repos": apache2_repos}
     for org_payload, repos_payload, expected_repos, apache2_repos in TEST_PAYLOAD
 ])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
@@ -27,9 +27,9 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """Mock the response based on URL."""
         if 'orgs/google' in url:
             if '/repos' in url:
-                return MockResponse(lambda: repos_payload)
+                return MockResponse(lambda: TestIntegrationGithubOrgClient.repos_payload)
             else:
-                return MockResponse(lambda: org_payload)
+                return MockResponse(lambda: TestIntegrationGithubOrgClient.org_payload)
         raise ValueError("Unexpected URL requested")
 
     @classmethod
@@ -49,6 +49,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         repos = org_client.public_repos(license="apache-2.0")
         self.assertEqual(repos, self.apache2_repos)
 
+
 class MockResponse:
     """A mock response class for simulating API responses."""
 
@@ -58,6 +59,7 @@ class MockResponse:
     def json(self):
         """Return the JSON data."""
         return self.json_data()
+
 
 class TestGithubOrgClient(unittest.TestCase):
     """Test class for GithubOrgClient"""
@@ -81,7 +83,7 @@ class TestGithubOrgClient(unittest.TestCase):
 
     def test_public_repos_url(self):
         """
-        Test the *public*repos_url property of GithubOrgClient.
+        Test the _public_repos_url property of GithubOrgClient.
         """
         mock_payload = {
             "repos_url": "https://api.github.com/orgs/google/repos"
@@ -108,7 +110,7 @@ class TestGithubOrgClient(unittest.TestCase):
             {"name": "repo3"}
         ]
 
-        # Mock the *public*repos_url property
+        # Mock the _public_repos_url property
         mock_repos_url = "mocked_repos_url"
 
         # Setup the mocks
