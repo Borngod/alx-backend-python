@@ -13,52 +13,40 @@ from fixtures import TEST_PAYLOAD
     for org_payload, repos_payload, expected_repos, apache2_repos in TEST_PAYLOAD
 ])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
-    """Integration test class for GithubOrgClient"""
+    def __init_subclass__(cls, **kwargs):
+        cls.org_payload = kwargs.get('org_payload')
+        cls.repos_payload = kwargs.get('repos_payload')
+        cls.expected_repos = kwargs.get('expected_repos')
+        cls.apache2_repos = kwargs.get('apache2_repos')
 
     @classmethod
     def setUpClass(cls):
-        """Set up class with necessary mocks for testing."""
         cls.get_patcher = patch('requests.get', side_effect=cls.mock_get_response)
         cls.get_patcher.start()
 
-    @staticmethod
-    def mock_get_response(url):
+    @classmethod
+    def mock_get_response(cls, url):
         """Mock the response based on URL."""
         if 'orgs/google' in url:
             if '/repos' in url:
-                return MockResponse(lambda: TestIntegrationGithubOrgClient.repos_payload)
+                return MockResponse(lambda: cls.repos_payload)
             else:
-                return MockResponse(lambda: TestIntegrationGithubOrgClient.org_payload)
+                return MockResponse(lambda: cls.org_payload)
         raise ValueError("Unexpected URL requested")
 
     @classmethod
     def tearDownClass(cls):
-        """Clean up after tests by stopping the patcher."""
         cls.get_patcher.stop()
 
     def test_public_repos(self):
-        """Test the public_repos method with integration mocks."""
         org_client = GithubOrgClient("google")
         repos = org_client.public_repos()
         self.assertEqual(repos, self.expected_repos)
 
     def test_public_repos_with_license(self):
-        """Test public_repos method filtering by license."""
         org_client = GithubOrgClient("google")
         repos = org_client.public_repos(license="apache-2.0")
         self.assertEqual(repos, self.apache2_repos)
-
-
-class MockResponse:
-    """A mock response class for simulating API responses."""
-
-    def __init__(self, json_data):
-        self.json_data = json_data
-
-    def json(self):
-        """Return the JSON data."""
-        return self.json_data()
-
 
 class TestGithubOrgClient(unittest.TestCase):
     """Test class for GithubOrgClient"""
