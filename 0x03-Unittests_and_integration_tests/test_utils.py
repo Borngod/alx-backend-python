@@ -8,7 +8,7 @@ functionality of the access_nested_map function from the utils module.
 import unittest
 from parameterized import parameterized
 from utils import access_nested_map, get_json, memoize
-
+from unittest.mock import patch, Mock
 
 class TestAccessNestedMap(unittest.TestCase):
     """
@@ -32,7 +32,10 @@ class TestAccessNestedMap(unittest.TestCase):
             path (tuple): Path to access in the nested dictionary
             expected: Expected return value
         """
-        self.assertEqual(access_nested_map(nested_map, path), expected)
+        self.assertEqual(
+            access_nested_map(nested_map, path),
+            expected
+        )
 
     @parameterized.expand([
         ({}, ("a",), "a"),
@@ -50,10 +53,10 @@ class TestAccessNestedMap(unittest.TestCase):
         with self.assertRaises(KeyError) as context:
             access_nested_map(nested_map, path)
 
-        self.assertEqual(str(context.exception), repr(key))
-
-
-from unittest.mock import patch, Mock
+        self.assertEqual(
+            str(context.exception),
+            repr(key)
+        )
 
 
 class TestGetJson(unittest.TestCase):
@@ -90,7 +93,10 @@ class TestGetJson(unittest.TestCase):
             mock_get.assert_called_once_with(test_url)
 
             # Verify the returned result matches the test payload
-            self.assertEqual(result, test_payload)
+            self.assertEqual(
+                result,
+                test_payload
+            )
 
 
 class TestMemoize(unittest.TestCase):
