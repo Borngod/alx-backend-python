@@ -4,8 +4,7 @@ Module for unit testing the GithubOrgClient class.
 
 This module contains comprehensive unit tests for the GithubOrgClient class,
 including both unit tests and integration tests. It uses parameterized testing
-to verify various methods of the GitHub organization client, such as retrieving
-organization information, public repositories, and license checking.
+to verify various methods of the GitHub organization client.
 """
 import unittest
 from unittest.mock import patch, PropertyMock
@@ -20,8 +19,7 @@ class MockResponse:
     A mock response class for simulating API responses in testing.
 
     This class provides a way to mock JSON responses from API calls,
-    allowing controlled testing of network-dependent methods without
-    making actual network requests.
+    allowing controlled testing of network-dependent methods.
     """
 
     def __init__(self, json_data):
@@ -43,13 +41,16 @@ class MockResponse:
         return self.json_data()
 
 
-@parameterized_class(('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'), TEST_PAYLOAD)
+@parameterized_class(
+    ('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'),
+    TEST_PAYLOAD
+)
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """
     Integration test class for GithubOrgClient.
 
     This class performs integration tests on the GithubOrgClient,
-    verifying its behavior with predefined test payloads from fixtures.
+    verifying its behavior with predefined test payloads.
     """
 
     @classmethod
@@ -60,7 +61,9 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         This method patches the requests.get method to return predefined
         mock responses for testing purposes.
         """
-        cls.get_patcher = patch('requests.get', side_effect=cls.mock_get_response)
+        cls.get_patcher = patch(
+            'requests.get', side_effect=cls.mock_get_response
+        )
         cls.get_patcher.start()
 
     @classmethod
@@ -80,8 +83,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         if 'orgs/google' in url:
             if '/repos' in url:
                 return MockResponse(lambda: cls.repos_payload)
-            else:
-                return MockResponse(lambda: cls.org_payload)
+            return MockResponse(lambda: cls.org_payload)
         raise ValueError("Unexpected URL requested")
 
     @classmethod
@@ -208,7 +210,7 @@ class TestGithubOrgClient(unittest.TestCase):
             self.assertEqual(result, ["repo1", "repo2", "repo3"])
             mock_get_json.assert_called_once_with(mock_repos_url)
             mock_property.assert_called_once()
-    
+
     @parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),
         ({"license": {"key": "other_license"}}, "my_license", False),
