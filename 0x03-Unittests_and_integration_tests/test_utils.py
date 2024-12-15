@@ -46,7 +46,8 @@ class TestAccessNestedMap(unittest.TestCase):
     ])
     def test_access_nested_map_exception(self, nested_map, path, key):
         """
-        Parameterized test method to check KeyError raising in access_nested_map.
+        Parameterized test method to check KeyError
+        raising in access_nested_map.
 
         Args:
             nested_map (dict): Input nested dictionary
@@ -86,7 +87,6 @@ class TestGetJson(unittest.TestCase):
         """
         # Create a mock response with a json method
         with patch('requests.get') as mock_get:
-            # Configure the mock to return a mock with the specified json payload
             mock_response = Mock()
             mock_response.json.return_value = test_payload
             mock_get.return_value = mock_response
