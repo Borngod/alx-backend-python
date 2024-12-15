@@ -7,7 +7,7 @@ functionality of the access_nested_map function from the utils module.
 """
 import unittest
 from parameterized import parameterized
-from utils import access_nested_map
+from utils import access_nested_map, get_json, memoize
 
 
 class TestAccessNestedMap(unittest.TestCase):
@@ -98,7 +98,6 @@ class TestGetJson(unittest.TestCase):
 class TestMemoize(unittest.TestCase):
     """
     Test case for the memoize decorator.
-    Verifies that memoize caches the result of a method after the first call.
     """
 
     class TestClass:
@@ -116,13 +115,9 @@ class TestMemoize(unittest.TestCase):
         """
         obj = self.TestClass()
 
-        # Call the memoized property twice
         self.assertEqual(obj.a_property, 42)
         self.assertEqual(obj.a_property, 42)
-
-        # Assert that a_method was called only once
         mock_a_method.assert_called_once()
-
 
 
 if __name__ == '__main__':
