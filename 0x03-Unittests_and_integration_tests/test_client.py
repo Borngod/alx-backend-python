@@ -25,7 +25,7 @@ class TestGithubOrgClient(unittest.TestCase):
             org_name (str): Name of the GitHub organization to test
         """
         # Create test configuration
-        test_payload = {"name": org_name}
+        test_payload = {"repos_url": "https://api.github.com/orgs/{}/repos".format(org_name)}
         
         # Use patch to mock get_json and prevent external HTTP calls
         with patch('client.get_json') as mock_get_json:
