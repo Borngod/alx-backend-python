@@ -2,7 +2,7 @@
 """
 Unit tests for the nested map access utility module.
 
-This module contains comprehensive unit tests to verify the 
+This module contains comprehensive unit tests to verify the
 functionality of the access_nested_map function from the utils module.
 """
 import unittest
@@ -34,7 +34,6 @@ class TestAccessNestedMap(unittest.TestCase):
         """
         self.assertEqual(access_nested_map(nested_map, path), expected)
 
-
     @parameterized.expand([
         ({}, ("a",), "a"),
         ({"a": 1}, ("a", "b"), "b")
@@ -50,19 +49,18 @@ class TestAccessNestedMap(unittest.TestCase):
         """
         with self.assertRaises(KeyError) as context:
             access_nested_map(nested_map, path)
-        
+
         self.assertEqual(str(context.exception), repr(key))
 
 
 from unittest.mock import patch, Mock
-from utils import get_json
 
 
 class TestGetJson(unittest.TestCase):
     """
     Test case for the get_json function.
 
-    Provides tests to verify correct behavior of JSON retrieval 
+    Provides tests to verify correct behavior of JSON retrieval
     from URLs using mocked HTTP requests.
     """
 
