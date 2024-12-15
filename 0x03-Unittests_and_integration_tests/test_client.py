@@ -31,8 +31,8 @@ class TestGithubOrgClient(unittest.TestCase):
             # Set the return value for the mocked get_json
             mock_get_json.return_value = expected_result
 
-            # Call the org method
-            result = org_client.org()
+            # Call the org property (no parentheses!)
+            result = org_client.org
 
             # Assert that the result matches the expected result
             self.assertEqual(result, expected_result)
@@ -42,6 +42,6 @@ class TestGithubOrgClient(unittest.TestCase):
                 f"https://api.github.com/orgs/{org_name}"
             )
 
-        
+
 if __name__ == '__main__':
     unittest.main()
