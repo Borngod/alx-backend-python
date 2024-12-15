@@ -19,17 +19,8 @@ class MockResponse:
         return self.json_data()
 
 
-@parameterized_class([
-    {"org_payload": org_payload, "repos_payload": repos_payload, "expected_repos": expected_repos, "apache2_repos": apache2_repos}
-    for org_payload, repos_payload, expected_repos, apache2_repos in TEST_PAYLOAD
-])
+@parameterized_class(('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'), TEST_PAYLOAD)
 class TestIntegrationGithubOrgClient(unittest.TestCase):
-    def __init_subclass__(cls, **kwargs):
-        cls.org_payload = kwargs.get('org_payload')
-        cls.repos_payload = kwargs.get('repos_payload')
-        cls.expected_repos = kwargs.get('expected_repos')
-        cls.apache2_repos = kwargs.get('apache2_repos')
-
     @classmethod
     def setUpClass(cls):
         cls.get_patcher = patch('requests.get', side_effect=cls.mock_get_response)
@@ -38,12 +29,12 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     @classmethod
     def mock_get_response(cls, url):
         """Mock the response based on URL."""
-        if 'orgs/google' in url and '/repos' not in url:
-            return MockResponse(lambda: cls.org_payload)
-        elif 'orgs/google/repos' in url:
-            return MockResponse(lambda: cls.repos_payload)
+        if 'orgs/google' in url:
+            if '/repos' in url:
+                return MockResponse(lambda: cls.repos_payload)
+            else:
+                return MockResponse(lambda: cls.org_payload)
         raise ValueError("Unexpected URL requested")
-    
 
     @classmethod
     def tearDownClass(cls):
@@ -133,6 +124,7 @@ class TestGithubOrgClient(unittest.TestCase):
     @parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),
         ({"license": {"key": "other_license"}}, "my_license", False),
+        ({}, "my_license", False)
     ])
     def test_has_license(self, repo, license_key, expected_result):
         """
