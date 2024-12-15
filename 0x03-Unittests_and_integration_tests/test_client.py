@@ -41,10 +41,10 @@ class MockResponse:
         return self.json_data()
 
 
-@parameterized_class([
-    {"org_payload": org_payload, "repos_payload": repos_payload, "expected_repos": expected_repos, "apache2_repos": apache2_repos}
-    for org_payload, repos_payload, expected_repos, apache2_repos in TEST_PAYLOAD
-])
+@parameterized_class(
+    ('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'),
+    TEST_PAYLOAD
+)
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """
     Integration test class for GithubOrgClient.
@@ -61,10 +61,10 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         This method patches the requests.get method to return predefined
         mock responses for testing purposes.
         """
-        cls._patcher = patch(
+        cls.get_patcher = patch(
             'requests.get', side_effect=cls.mock_get_response
         )
-        cls.get_patcher = cls._patcher.start()
+        cls.get_patcher.start()
 
     @classmethod
     def mock_get_response(cls, url):
@@ -94,7 +94,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         This method stops the mocking of requests.get to restore
         normal network request behavior.
         """
-        cls._patcher.stop()
+        cls.get_patcher.stop()
 
     def test_public_repos(self):
         """
