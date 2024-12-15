@@ -7,11 +7,9 @@ functionality of the access_nested_map function from the utils module.
 """
 import unittest
 from parameterized import parameterized
-from utils import access_nested_map, get_json, memoize
 from unittest.mock import patch, Mock
+from utils import access_nested_map, get_json, memoize
 
-
-# Two blank lines before class definition
 
 class TestAccessNestedMap(unittest.TestCase):
     """
@@ -44,7 +42,9 @@ class TestAccessNestedMap(unittest.TestCase):
         ({}, ("a",), "a"),
         ({"a": 1}, ("a", "b"), "b")
     ])
-    def test_access_nested_map_exception(self, nested_map, path, key):
+    def test_access_nested_map_exception(
+        self, nested_map, path, key
+    ):
         """
         Parameterized test method to check KeyError
         raising in access_nested_map.
@@ -62,8 +62,6 @@ class TestAccessNestedMap(unittest.TestCase):
             repr(key)
         )
 
-
-# Two blank lines before class definition
 
 class TestGetJson(unittest.TestCase):
     """
@@ -98,13 +96,8 @@ class TestGetJson(unittest.TestCase):
             mock_get.assert_called_once_with(test_url)
 
             # Verify the returned result matches the test payload
-            self.assertEqual(
-                result,
-                test_payload
-            )
+            self.assertEqual(result, test_payload)
 
-
-# Two blank lines before class definition
 
 class TestMemoize(unittest.TestCase):
     """
@@ -122,7 +115,8 @@ class TestMemoize(unittest.TestCase):
     @patch.object(TestClass, 'a_method', return_value=42)
     def test_memoize(self, mock_a_method):
         """
-        Test that a_property calls a_method only once, even when accessed multiple times.
+        Test that a_property calls a_method only once, 
+        even when accessed multiple times.
         """
         obj = self.TestClass()
 
