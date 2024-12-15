@@ -9,9 +9,18 @@ from fixtures import TEST_PAYLOAD
 
 
 @parameterized_class([
-    {"org_payload": org_payload, "repos_payload": repos_payload, "expected_repos": expected_repos,
-     "apache2_repos": apache2_repos}
-    for org_payload, repos_payload, expected_repos, apache2_repos in TEST_PAYLOAD
+    {
+        "org_payload": {
+            "repos_url": "https://api.github.com/orgs/google/repos"
+        },
+        "repos_payload": [
+            {"name": "repo1", "license": {"key": "apache-2.0"}},
+            {"name": "repo2", "license": {"key": "mit"}},
+            {"name": "repo3"}
+        ],
+        "expected_repos": ["repo1", "repo2", "repo3"],
+        "apache2_repos": ["repo1"]
+    }
 ])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Integration test class for GithubOrgClient"""
@@ -20,7 +29,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     def setUpClass(cls):
         """Set up class with necessary mocks for testing."""
         cls.get_patcher = patch('requests.get', side_effect=cls.mock_get_response)
-        cls.get_patcher.start()
+        cls.mocked_get = cls.get_patcher.start()
 
     @staticmethod
     def mock_get_response(url):
