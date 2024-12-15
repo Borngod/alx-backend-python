@@ -119,6 +119,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         self.assertEqual(repos, self.apache2_repos)
 
 
+
 class TestGithubOrgClient(unittest.TestCase):
     """
     Unit test class for GithubOrgClient.
