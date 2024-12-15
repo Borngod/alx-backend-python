@@ -8,6 +8,17 @@ import requests
 from fixtures import TEST_PAYLOAD
 
 
+class MockResponse:
+    """A mock response class for simulating API responses."""
+
+    def __init__(self, json_data):
+        self.json_data = json_data
+
+    def json(self):
+        """Return the JSON data."""
+        return self.json_data()
+
+
 @parameterized_class([
     {"org_payload": org_payload, "repos_payload": repos_payload, "expected_repos": expected_repos, "apache2_repos": apache2_repos}
     for org_payload, repos_payload, expected_repos, apache2_repos in TEST_PAYLOAD
@@ -47,6 +58,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         org_client = GithubOrgClient("google")
         repos = org_client.public_repos(license="apache-2.0")
         self.assertEqual(repos, self.apache2_repos)
+
 
 class TestGithubOrgClient(unittest.TestCase):
     """Test class for GithubOrgClient"""
